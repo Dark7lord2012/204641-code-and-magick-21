@@ -1,11 +1,8 @@
 'use strict';
 
-let setup = document.querySelector(`.setup`);
-setup.classList.remove(`hidden`);
-
-const names = [`Иван`, `Хуан Себастьян`, `Мария`, `Кристоф`, `Виктор`, `Юлия`, `Люпита`, `Вашингтон`];
-const families = [`да Марья`, `Верон`, `Мирабелла`, `Вальц`, `Онопко`, `Топольницкая`, `Нионго`, `Ирвинг`];
-const colors = [
+const WIZARD_NAMES = [`Иван`, `Хуан Себастьян`, `Мария`, `Кристоф`, `Виктор`, `Юлия`, `Люпита`, `Вашингтон`];
+const WIZARD_FAMILIES = [`да Марья`, `Верон`, `Мирабелла`, `Вальц`, `Онопко`, `Топольницкая`, `Нионго`, `Ирвинг`];
+const COAT_COLORS = [
   `rgb(101, 137, 164)`,
   `rgb(241, 43, 107)`,
   `rgb(146, 100, 161)`,
@@ -13,28 +10,55 @@ const colors = [
   `rgb(215, 210, 55`,
   `rgb(0, 0, 0)`
 ];
-const eyesColors = [
-  `black`,
-  `red`,
-  `blue`,
-  `yellow`,
-  `green`
-];
+const EYES_COLORS = [`black`, `red`, `blue`, `yellow`, `green`];
 
-const generatePlayers = (length) => {
-  let players = [];
+let userDialog = document.querySelector(`.setup`);
+userDialog.classList.remove(`hidden`);
 
-  for (let i = 0; i < length; i++) {
-    players[i] = {
-      name: names[Math.ceil(Math.random() * (names.length) - 1)],
-      family: families[Math.ceil(Math.random() * (families.length - 1))],
-      color: colors[Math.ceil(Math.random() * (colors.length) - 1)],
-      eyesColor: eyesColors[Math.ceil(Math.random() * (eyesColors.length) - 1)]
+let similarListElement = userDialog.querySelector(`.setup-similar-list`);
+
+let similarWizardTemplate = document.querySelector(`#similar-wizard-template`)
+  .content
+  .querySelector(`.setup-similar-item`);
+
+let generateWizards = (lengthPlayers) => {
+  let wizards = [];
+
+  for (let i = 0; i < lengthPlayers; i++) {
+    wizards[i] = {
+      // Невероятное выражение для рандомного имени
+      name:
+        (Math.round(Math.random()))
+          ?
+          `${WIZARD_NAMES[Math.round(Math.random() * (WIZARD_NAMES.length - 1))]}
+            ${WIZARD_FAMILIES[Math.round(Math.random() * (WIZARD_FAMILIES.length - 1))]}`
+          :
+          `${WIZARD_FAMILIES[Math.round(Math.random() * (WIZARD_FAMILIES.length - 1))]}
+            ${WIZARD_NAMES[Math.round(Math.random() * (WIZARD_NAMES.length - 1))]}`,
+      coatColor: COAT_COLORS[Math.round(Math.random() * (COAT_COLORS.length - 1))],
+      eyesColor: EYES_COLORS[Math.round(Math.random() * (EYES_COLORS.length - 1))]
     };
-    console.log(players[i].name + ' ' + players[i].family + ' ' + players[i].color + ' ' + players[i].eyesColor);
   }
 
-  return players;
+  return wizards;
 };
 
-generatePlayers(8);
+let wizards = generateWizards(4);
+
+let renderWizard = (wizard) => {
+  let wizardElement = similarWizardTemplate.cloneNode(true);
+
+  wizardElement.querySelector(`.setup-similar-label`).textContent = wizard.name;
+  wizardElement.querySelector(`.wizard-coat`).style.fill = wizard.coatColor;
+  wizardElement.querySelector(`.wizard-eyes`).style.fill = wizard.eyesColor;
+
+  return wizardElement;
+};
+
+let fragment = document.createDocumentFragment();
+for (let i = 0; i < wizards.length; i++) {
+  fragment.appendChild(renderWizard(wizards[i]));
+}
+similarListElement.appendChild(fragment);
+
+userDialog.querySelector(`.setup-similar`).classList.remove(`hidden`);
