@@ -54,8 +54,7 @@ window.renderStatistics = (ctx, players, times) => {
     if (players[i] === `Вы`) {
       ctx.fillStyle = `red`;
     } else {
-      // ctx.fillStyle = hsl(240, 100, 100); почему-то не срабатывает
-      ctx.fillStyle = `rgba(0, 0, ${Math.ceil(Math.random() * 255)})`;
+      ctx.fillStyle = `hsl(240, ${Math.ceil(Math.random() * 100)}%, 50%)`;
     }
 
     ctx.fillRect(
