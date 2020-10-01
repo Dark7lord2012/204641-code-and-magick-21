@@ -11,11 +11,100 @@ const COAT_COLORS = [
   `rgb(0, 0, 0)`
 ];
 const EYES_COLORS = [`black`, `red`, `blue`, `yellow`, `green`];
+const FIREBALL_COLORS = [`#ee4830`, `#30a8ee`, `#5ce6c0`, `#e848d5`, `#e6e848`];
+const MIN_NAME_LENGTH = 2;
+const MAX_NAME_LENGTH = 25;
 
-let userDialog = document.querySelector(`.setup`);
-userDialog.classList.remove(`hidden`);
+const wizardCoat = document.querySelector(`.setup-wizard .wizard-coat`);
+const wizardEyes = document.querySelector(`.setup-wizard .wizard-eyes`);
+const wizardFireball = document.querySelector(`.setup-fireball-wrap`);
+const wizardCoatInput = document.querySelector(`.setup-player input[name="coat-color"]`);
+const wizardEyesInput = document.querySelector(`.setup-player input[name="eyes-color"]`);
+const wizardFireballInput = document.querySelector(`.setup-player input[name="eyes-color"]`);
 
-let similarListElement = userDialog.querySelector(`.setup-similar-list`);
+// Открытие, закрытие нaстроек игрока
+
+let setupOpen = document.querySelector(`.setup-open`);
+let setup = document.querySelector(`.setup`);
+let setupClose = setup.querySelector(`.setup-close`);
+let userNameInput = document.querySelector(`.setup-user-name`);
+
+const onPopupEscPress = (evt) => {
+  if (evt.key === `Escape` && evt.target !== userNameInput) {
+    evt.preventDefault();
+    closePopup();
+  }
+};
+
+const openPopup = () => {
+  setup.classList.remove(`hidden`);
+  document.addEventListener(`keydown`, onPopupEscPress);
+};
+
+const closePopup = () => {
+  setup.classList.add(`hidden`);
+  document.removeEventListener(`keydown`, onPopupEscPress);
+};
+
+setupOpen.addEventListener(`click`, function () {
+  openPopup();
+});
+
+setupOpen.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    openPopup();
+  }
+});
+
+setupClose.addEventListener(`click`, function () {
+  closePopup();
+});
+
+setupClose.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    closePopup();
+  }
+});
+
+// Валидация имени
+
+userNameInput.addEventListener(`input`, () => {
+  let valueLength = userNameInput.value.length;
+
+  if (valueLength < MIN_NAME_LENGTH) {
+    userNameInput.setCustomValidity(`Ещё ` + (MIN_NAME_LENGTH - valueLength) + ` симв.`);
+  } else if (valueLength > MAX_NAME_LENGTH) {
+    userNameInput.setCustomValidity(`Удалите лишние ` + (valueLength - MAX_NAME_LENGTH) + ` симв.`);
+  } else {
+    userNameInput.setCustomValidity(``);
+  }
+
+  userNameInput.reportValidity();
+});
+
+// Смена мантии, глаз, огнешара
+
+wizardCoat.addEventListener(`click`, () => {
+  const color = `${COAT_COLORS[Math.round(Math.random() * (COAT_COLORS.length - 1))]}`;
+  wizardCoat.style.fill = color;
+  wizardCoatInput.value = color;
+});
+
+wizardEyes.addEventListener(`click`, () => {
+  const color = `${EYES_COLORS[Math.round(Math.random() * (EYES_COLORS.length - 1))]}`;
+  wizardEyes.style.fill = color;
+  wizardEyesInput.value = color;
+});
+
+wizardFireball.addEventListener(`click`, () => {
+  const color = `${FIREBALL_COLORS[Math.round(Math.random() * (FIREBALL_COLORS.length - 1))]}`;
+  wizardFireball.style.backgroundColor = color;
+  wizardFireballInput.value = color;
+});
+
+// Статистика в виде диаграммы
+
+let similarListElement = setup.querySelector(`.setup-similar-list`);
 
 let similarWizardTemplate = document.querySelector(`#similar-wizard-template`)
   .content
@@ -61,4 +150,4 @@ for (let i = 0; i < wizards.length; i++) {
 }
 similarListElement.appendChild(fragment);
 
-userDialog.querySelector(`.setup-similar`).classList.remove(`hidden`);
+setup.querySelector(`.setup-similar`).classList.remove(`hidden`);
