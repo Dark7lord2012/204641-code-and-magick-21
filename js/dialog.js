@@ -41,11 +41,4 @@
       closePopup();
     }
   });
-
-  // Перемещение перетаскиванием
-  let dialogHandle = setup.querySelector(`.upload`);
-
-  dialogHandle.addEventListener(`mousedown`, function (evt) {
-    evt.preventDefault();
-  });
 })();
