@@ -1,7 +1,5 @@
 'use strict';
 (() => {
-  // let setup = document.querySelector(`.setup`);
-  // let userNameInput = document.querySelector(`.setup-user-name`);
   let setup = window.setup.setup;
   let userNameInput = window.setup.userNameInput;
   let setupOpen = document.querySelector(`.setup-open`);
@@ -42,5 +40,12 @@
     if (evt.key === `Enter`) {
       closePopup();
     }
+  });
+
+  // Перемещение перетаскиванием
+  let dialogHandle = setup.querySelector(`.upload`);
+
+  dialogHandle.addEventListener(`mousedown`, function (evt) {
+    evt.preventDefault();
   });
 })();
