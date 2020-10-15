@@ -1,4 +1,5 @@
 'use strict';
+
 (() => {
   let setup = window.setup.setup;
   let userNameInput = window.setup.userNameInput;
